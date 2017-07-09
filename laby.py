@@ -113,13 +113,27 @@ class Labyrinth_MG:
         if (a, b) not in self.tab_position_wall and a in range(self.width) and b in range(self.width):  # test si mur ou hors jeu
             self.zone_c.delete(self.mac_giver)  # delete mac giver
             self.position_mac_giver[0] = a
-            self.position_mac_giver[1] = b
-            # create mac giver new position
-            self.draw_mac_giver(self.position_mac_giver)
-            if tuple(self.position_mac_giver) in self.tab_objets:  # test si objet dans emplacement
+            self.position_mac_giver[1] = b           
+            self.draw_mac_giver(self.position_mac_giver) # create mac giver new position
+            if tuple(self.position_mac_giver) in self.tab_objets:  # test si objet dans position de mac giver
                 a = self.tab_objets.pop(self.tab_objets.index(
                     tuple(self.position_mac_giver)))  # reste objet a recuperer
                 self.zone_c.delete(self.dict_ref_objet[a])  # desruction objet
+            if self.position_mac_giver == self.position_guardian:
+            	self.zone_c.unbind('<Up>')
+            	self.zone_c.unbind('<Down>')
+            	self.zone_c.unbind('<Left>')
+            	self.zone_c.unbind('<Right>')            	
+            	if len(self.tab_objets) ==0:
+            		self.zone_c.delete(self.guardian)            		           		            	
+            		texte= "You win !!!!!!"
+            	else:
+            		self.zone_c.delete(self.mac_giver)             	
+            		texte="You Lose !!!!!!!!!"
+            	self.txt = self.zone_c.create_text(int(self.width * self.dimension_sprite / 2), int(
+            self.width * self.dimension_sprite / 2), text=texte, font="Arial 16 italic bold", fill="white")
+            	
+
 
     def kill_game(self, event):
         """ closed game"""
@@ -128,6 +142,6 @@ class Labyrinth_MG:
 
 if __name__ == '__main__':
     root = Tk()
-    root.title('Labyrinthe 0.1')
+    root.title('Labyrinthe 0.2')
     widget = Labyrinth_MG(root)
     root.mainloop()
