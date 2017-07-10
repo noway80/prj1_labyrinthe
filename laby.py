@@ -90,7 +90,7 @@ class Labyrinth_MG:
         """Draw objects and create ref objects in a dictionary to erase later"""
         tab_pictures = [self.picture_needle,
                         self.picture_syringe, self.picture_ether]
-        for i in range(3):
+        for i in range(len(tab_pictures)):
             pos = t_obj.pop(random.randint(0, len(t_obj) - 1))
             self.dict_ref_objet[pos] = self.zone_c.create_image(
                 pos[0] * self.dimension_sprite, pos[1] * self.dimension_sprite, anchor=NW, image=tab_pictures[i])
@@ -141,6 +141,7 @@ class Labyrinth_MG:
             threading.Thread(None, self.affiche_compteur).start()
 
     def affiche_compteur(self):
+        """ dispaly count objets"""
         while self.aff == True:
             time.sleep(0.1)
         self.aff = True
