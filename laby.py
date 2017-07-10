@@ -40,6 +40,7 @@ class Labyrinth_MG:
         self.tab_position_wall = []  # stock positions mur
         self.tab_position_character = []  # position des personnages
         self.tab_objets = []  # positions des objets
+        self.aff=False # flag pour eviter double affichage compteur 
 
     def zone(self):
         """initialiser la zone"""
@@ -62,7 +63,6 @@ class Labyrinth_MG:
 
     def init_game(self, event):
         """ init des objets et des personnages , mise en place des commandes"""
-        print("ok")
         self.zone_c.unbind('<space>')
         self.zone_c.delete(self.txt)
         self.zone()
@@ -140,6 +140,9 @@ class Labyrinth_MG:
                     self.width * self.dimension_sprite / 2), text=texte, font="Arial 16 italic bold", fill="white")
 
     def affiche_compteur(self):
+        while self.aff == True:
+    	    time.sleep(0.1)
+        self.aff=True
         if len(self.tab_objets) == 0:
     	    texte="You can escape ...."
         else:
@@ -149,6 +152,7 @@ class Labyrinth_MG:
                 self.width * self.dimension_sprite / 2), text=texte, font="Arial 16 italic bold", fill=coul)
             time.sleep(0.7)
             self.zone_c.delete(self.txt)
+        self.aff=False
 
     def kill_game(self, event):
         """ closed game"""
@@ -157,6 +161,6 @@ class Labyrinth_MG:
 
 if __name__ == '__main__':
     root = Tk()
-    root.title('Labyrinthe 0.3')
+    root.title('Labyrinthe 0.3.1')
     widget = Labyrinth_MG(root)
     root.mainloop()
