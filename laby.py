@@ -5,31 +5,43 @@ from tkinter import *
 import random
 import time
 import threading
+from tkinter import messagebox
+#import sys
+#import os
 
 
 class Labyrinth_MG:
 
     def __init__(self, frame):
         """ init variables"""
-        self.dimension_sprite = 25
-        self.width = 15  # number of cases
-        self.picture_needle = PhotoImage(
-            file='./images/aiguille.png')  # picture needle
-        self.picture_syringe = PhotoImage(
-            file='./images/seringue.png')  # picture syringe
-        self.picture_ether = PhotoImage(
-            file='./images/ether.png')  # picture ether
-        self.picture_wall = PhotoImage(file='./images/mur.png')  # picture wall
-        self.picture_mg = PhotoImage(
-            file='./images/mg.png')  # picture mac giver
-        self.picture_gd = PhotoImage(
-            file='./images/gd.png')  # picture guardian
+        #real_path=os.path.dirname(__file__)
+        #print(os.path.dirname(os.path.realpath(sys.argv[0])))
         self.frame = frame
+        try:
+            self.dimension_sprite = 25
+            self.width = 15  # number of cases        
+            self.picture_needle = PhotoImage(
+                file='./images/aiguille.png')  # picture needle
+            self.picture_syringe = PhotoImage(
+                file='./images/seringue.png')  # picture syringe
+            self.picture_ether = PhotoImage(
+                file='./images/ether.png')  # picture ether
+            self.picture_wall = PhotoImage(file='./images/mur.png')  # picture wall
+            self.picture_mg = PhotoImage(
+                file='./images/mg.png')  # picture mac giver
+            self.picture_gd = PhotoImage(
+                file='./images/gd.png')  # picture guardian
+            self.map_game = ["./zones/zone1.txt", "./zones/zone2.txt",
+                   "./zones/zone3.txt"]
+            self.im_fond = PhotoImage(file='./images/fond.png')       
+        except Exception as e:
+            messagebox.showinfo("Error Config", "Erreur : {}".format(e))
+            self.frame.destroy()
         self.zone_c = Canvas(self.frame, width=self.width *
                              self.dimension_sprite, height=self.width * self.dimension_sprite)
         self.zone_c.bind("<space>", self.init_game)
         self.zone_c.bind("<Escape>", self.kill_game)
-        self.im_fond = PhotoImage(file='./images/fond.png')
+        
         self.zone_c.create_image(0, 0, anchor=NW, image=self.im_fond)
         self.txt = self.zone_c.create_text(int(self.width * self.dimension_sprite / 2), int(
             self.width * self.dimension_sprite / 2), text='Press"SPACE" to Start !!!\r      "Echap" to quit', font="Arial 16 italic bold", fill="white")
@@ -39,13 +51,11 @@ class Labyrinth_MG:
         self.tab_position_objets = []  # position possible objet
         self.tab_position_wall = []  # stock positions wall
         self.tab_position_character = []  # position character
-
+          # Map with data
         self.aff = False  # Flag to avoid double display of counter
 
-    def zone(self):
+    def zone(self,file_in):
         """Initialize the zone and create lists of data of the locations of the characters, objects and wall"""
-        file_in = ["./zones/zone1.txt", "./zones/zone2.txt",
-                   "./zones/zone3.txt"]  # carte avec les données
         y = 0
         with open(file_in[random.randint(0, len(file_in) - 1)], 'r') as f:
             for line in f:
@@ -65,7 +75,7 @@ class Labyrinth_MG:
         """ Init objects and characters, set up commands"""
         self.zone_c.unbind('<space>')
         self.zone_c.delete(self.txt)
-        self.zone()
+        self.zone(self.map_game)
         self.position_mac_giver = self.tab_position_character[0]
         self.position_guardian = self.tab_position_character[1]
         self.draw_mac_giver(self.position_mac_giver, self.picture_mg)
@@ -103,8 +113,7 @@ class Labyrinth_MG:
     def move(self, event, a, b):
         """Move mac giver , recept x et y = 0,1 ou -1 and recalculates position"""
         # print(self.zone_c.coords(self.mac_giver))
-        a += self.position_mac_giver[0]
-        b += self.position_mac_giver[1]
+        a,b=[sum(x) for x in zip((a,b),self.position_mac_giver)]
         if (a, b) not in self.tab_position_wall and a in range(self.width) and b in range(self.width):  # Test if wall or offside
             # Choice delete / create mac giver instead of "coords"
             # to change picture
