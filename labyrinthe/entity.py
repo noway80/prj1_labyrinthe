@@ -18,23 +18,8 @@ class Objet:
     def position(self):
     	"""returm position x,y in list"""
     	return [self.set_position]
-	    
-    
-class Decor:
-    """ decor in zone"""
 
-    def __init__(self,nom_image,nom):
-        self.tab_position=[]
-        self.photo=nom_image
-        self.photoimage=""
-        self.name=nom
-        self.locate=""# objet on zone
+    def __str__(self):
+        return self.name
 	    
-    def add_position(self,pos):
-        """ append position """
-        self.tab_position.append(pos)
     
-    @property
-    def position(self):
-    	"""return list of positions"""
-    	return self.tab_position

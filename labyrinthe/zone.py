@@ -9,7 +9,7 @@ from tkinter import *
 
 class Zone:
 
-    def __init__(self, frame,objet,character,wall):
+    def __init__(self, frame,objet,character,wall,map_game):
         """ init variables"""
         self.frame = frame
         frame.resizable(False, False)
@@ -17,8 +17,7 @@ class Zone:
             self.dimension_sprite = 25
             self.width = 15  # number of case
             self.im_fond = PhotoImage(file='./images/fond.png')
-            self.map_game = ["./zones/zone1.txt", "./zones/zone2.txt",
-                             "./zones/zone3.txt"]# Map with data
+            self.map_game = map_game # cartes
         except Exception as e:
             messagebox.showinfo("Error Config", "Erreur : {}".format(e))
             self.frame.destroy()
@@ -32,8 +31,9 @@ class Zone:
         self.zone_c.pack()
         self.zone_c.focus_set()
         self.tab_objet=objet
-        self.mac_giver=character[0]
-        self.guardian=character[1]
+        self.tab_character=character
+        self.mac_giver=self.tab_character[0]
+        self.guardian=self.tab_character[1]
         self.wall=wall        
         self.aff = False  # Flag to avoid double display of counter
 
@@ -102,6 +102,16 @@ class Zone:
         self.zone_c.unbind('<Down>')
         self.zone_c.unbind('<Left>')
         self.zone_c.unbind('<Right>')
+        # re-init
+        self.wall.tab_position=[]
+        for obj in self.mac_giver.bag.values():
+        	self.tab_objet.append(obj)
+        self.mac_giver.dict_bag={}	
+        self.zone_c.delete(ALL)
+        self.zone_c.create_image(0, 0, anchor=NW, image=self.im_fond)
+        self.txt = self.zone_c.create_text(int(self.width * self.dimension_sprite / 2), int(
+            self.width * self.dimension_sprite / 2), text='Press"SPACE" to Start !!!\r      "Echap" to quit', font="Arial 16 italic bold", fill="white")
+        self.zone_c.bind("<space>", self.init_game)
 
     def kill_game(self, event):
         """ closed game"""
