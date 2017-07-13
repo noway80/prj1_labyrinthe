@@ -177,3 +177,5 @@ if __name__ == '__main__':
     root.title('Labyrinthe 0.3.3')
     widget = Labyrinth_MG(root)
     root.mainloop()
+  
+
