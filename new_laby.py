@@ -12,7 +12,7 @@ from labyrinthe.decor import Decor
 
 if __name__ == '__main__':
     wall = Decor('./images/mur.png', "Wall")
-    seringe = Objet('./images/seringue.png', "Seringe")
+    plastic_tube = Objet('./images/plastic_tube.png', "Plastic Tube")
     needle = Objet('./images/aiguille.png', "Needle")
     ether = Objet('./images/ether.png', "Ether")
     mac_giver = Character('./images/mg.png', "Mac Gyver")
@@ -20,7 +20,7 @@ if __name__ == '__main__':
     cartes = ["./zones/zone1.txt", "./zones/zone2.txt",
               "./zones/zone3.txt"]  # Map with data
     #cartes=[]
-    objet = [seringe, needle, ether]
+    objet = [plastic_tube, needle, ether]
     character = [mac_giver, guardian]
     root = Tk()
     root.title('New Labyrinthe 0.3')

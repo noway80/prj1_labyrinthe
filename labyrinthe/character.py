@@ -16,7 +16,8 @@ class Character(Objet):
     def move(self, event, a, b):
         """move on zone with x,y"""
         a, b = [sum(x) for x in zip((a, b), self.position[0])]
-        if (a, b) not in self.univers.wall.position and a in range(self.univers.width) and b in range(self.univers.width):
+        if (a, b) not in self.univers.wall.position and a in range(self.univers.width) \
+                 and b in range(self.univers.width):
             self.set_position = [a, b]
             self.univers.draw_entity(self)
             [self.objet_in_case(obj) for obj in self.univers.tab_objet]

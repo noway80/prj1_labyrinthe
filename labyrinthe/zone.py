@@ -20,7 +20,7 @@ class Zone:
             else:
                 self.width = 15  # number of case
             self.im_fond = PhotoImage(file='./images/fond.png')
-            self.map_game=map_game  # cartes
+            self.map_game=map_game  #map labyrinth
         except Exception as e:
             messagebox.showinfo("Error Config", "Erreur : {}".format(e))
             self.frame.destroy()
@@ -48,7 +48,7 @@ class Zone:
         y = 0
         tab_position_objets = []
         tab_position_character = []
-        if len(self.map_game) >0:
+        if len(file_in) > 0:
             with open(file_in[random.randint(0, len(file_in) - 1)], 'r') as f:
                 for line in f:
                     for x in range(self.width):
@@ -60,7 +60,7 @@ class Zone:
                             tab_position_character.append([x, y])
                     y += 1
         else:
-            f=self.make_labyrinthe(self.width)
+            f = self.make_labyrinth(self.width)
             for line in f:
                 for x in range(len(line)):
                     if line[x] == "t":  # wall position x,y
@@ -81,38 +81,14 @@ class Zone:
         self.guardian.set_position = tab_position_character[1]
         self.draw_entity(self.guardian)
 
-    def crea_zone2(self, f):
-        """Initialize the zone and create lists of data of the locations of the characters, objects and wall with list"""
-        y = 0
-        tab_position_objets = []
-        tab_position_character = []
-        for line in f:
-            for x in range(len(line)):
-                if line[x] == "t":  # wall position x,y
-                    self.wall.add_position((x, y))  # stock position wall
-                elif line[x] == "P":  # position possible mac giver guardian
-                    tab_position_character.append([x, y])
-                else:  # position possible object
-                    tab_position_objets.append([x, y])
-            y += 1    
-        self.draw_entity(self.wall)
-        for obj in self.tab_objet:
-            obj.set_position = tab_position_objets.pop(
-                random.randint(0, len(tab_position_objets) - 1))
-            self.draw_entity(obj)
-        self.mac_giver.set_position = tab_position_character[0]
-        self.draw_entity(self.mac_giver)
-        self.guardian.set_position = tab_position_character[1]
-        self.draw_entity(self.guardian)
-
-    def make_labyrinthe(self, v):
-        """ contruction d'un labyrinthe"""
+    def make_labyrinth(self, v):
+        """To make a labyrinth with algorithm random fusion """
         nb = 0
         tab_mur = []
         tab_chemin_init = []
         tt = [["t" for a in range(v)]
-              for x in range(v)]  # contruction laby vierge
-        for x, t1 in enumerate(tt):  # mise en place chemin init
+              for x in range(v)]  # new labyrinth
+        for x, t1 in enumerate(tt):  # path init
             for y, t2 in enumerate(t1):
                 if x % 2 != 0:
                     if y % 2 != 0:
@@ -125,9 +101,9 @@ class Zone:
                 else:
                     if x != 0 and x != (len(tt) - 1):
                         tab_mur.append((x, y))
-        tab_mur.remove((v - 3, v - 2))  # securite construction objet
-        tab_mur.remove((2, 1))  # securite init debut
-        while len(tab_mur) > 0:  # construction laby
+        tab_mur.remove((v - 3, v - 2)) #Security construction object
+        tab_mur.remove((2, 1))  # security init "start"
+        while len(tab_mur) > 0:  # make labyrinth with algo
             a, b = tab_mur.pop(random.randint(0, len(tab_mur) - 1))
             if tt[a][b] == 't':
                 if a % 2 == 0:
@@ -142,7 +118,7 @@ class Zone:
                             if t == v2:
                                 tt[i][j] = v1
                                 tt[a][b] = v1
-        for pos in range(0, -2, -1):  # mise en place emplacement init et fin
+        for pos in range(0, -2, -1):  # make "start" and "end"
             t = tab_chemin_init.pop(pos)
             tt[t[0]][t[1]] = "P"
         return tt
