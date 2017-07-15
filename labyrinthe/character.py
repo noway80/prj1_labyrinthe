@@ -32,7 +32,8 @@ class Character(Objet):
                              None, (self.bag,)).start()
 
     def end_game(self):
-        """ Desactivates commands and displays the result of the game if one is at the end"""
+        """Desactivates commands and displays the result of
+        the game if one is at the end"""
         if self.position == self.univers.guardian.position:
             if len(self.bag) == 3:
                 self.univers.zone_c.delete(self.univers.guardian.locate)

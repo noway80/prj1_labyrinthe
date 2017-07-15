@@ -19,9 +19,10 @@ if __name__ == '__main__':
     guardian = Character('./images/gd.png', "Mac Gyver")
     cartes = ["./zones/zone1.txt", "./zones/zone2.txt",
               "./zones/zone3.txt"]  # Map with data
+    #cartes=[]
     objet = [seringe, needle, ether]
     character = [mac_giver, guardian]
     root = Tk()
-    root.title('New Labyrinthe 0.2')
+    root.title('New Labyrinthe 0.3')
     widget = Zone(root, objet, character, wall, cartes)
     root.mainloop()
