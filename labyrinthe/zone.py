@@ -20,7 +20,7 @@ class Zone:
             else:
                 self.width = 15  # number of case
             self.im_fond = PhotoImage(file='./images/fond.png')
-            self.map_game=map_game  #map labyrinth
+            self.map_game = map_game  # map labyrinth
         except Exception as e:
             messagebox.showinfo("Error Config", "Erreur : {}".format(e))
             self.frame.destroy()
@@ -28,9 +28,10 @@ class Zone:
                              self.dimension_sprite, height=self.width * self.dimension_sprite)
         self.zone_c.create_image(0, 0, anchor=NW, image=self.im_fond)
         self.txt = self.zone_c.create_text(int(self.width * self.dimension_sprite / 2),
-                             int(self.width * self.dimension_sprite / 2), 
-                                    text='Press"SPACE" to Start !!! \r      "Echap" to quit', 
-                                                     font="Arial 16 italic bold", fill="white")
+                                           int(self.width *
+                                               self.dimension_sprite / 2),
+                                           text='Press"SPACE" to Start !!! \r      "Echap" to quit',
+                                           font="Arial 16 italic bold", fill="white")
         self.zone_c.bind("<space>", self.init_game)
         self.zone_c.bind("<Escape>", self.kill_game)
         self.zone_c.pack()
@@ -53,7 +54,8 @@ class Zone:
                 for line in f:
                     for x in range(self.width):
                         if line[x] == " ":  # wall position x,y
-                            self.wall.add_position((x, y))  # stock position wall
+                            # stock position wall
+                            self.wall.add_position((x, y))
                         elif line[x] == "O":  # position possible object
                             tab_position_objets.append([x, y])
                         elif line[x] == "P":  # position possible macgiver guardian
@@ -83,44 +85,23 @@ class Zone:
 
     def make_labyrinth(self, v):
         """To make a labyrinth with algorithm random fusion """
-        nb = 0
-        tab_mur = []
-        tab_chemin_init = []
-        tt = [["t" for a in range(v)]
-              for x in range(v)]  # new labyrinth
-        for x, t1 in enumerate(tt):  # path init
-            for y, t2 in enumerate(t1):
-                if x % 2 != 0:
-                    if y % 2 != 0:
-                        tt[x][y] = '{}'.format(nb)
-                        nb += 1
-                        tab_chemin_init.append((x, y))
-                    else:
-                        if y != 0 and y != (len(tt) - 1):
-                            tab_mur.append((x, y))
-                else:
-                    if x != 0 and x != (len(tt) - 1):
-                        tab_mur.append((x, y))
-        tab_mur.remove((v - 3, v - 2)) #Security construction object
+        tt = [[("t" if i % 2 == 0 else ("t" if j % 2 == 0 else i * v + j))
+               for j in range(v)] for i in range(v)]
+        tab_mur = [(i, j) for i, t1 in enumerate(tt) if i in range(1, (len(tt) - 1), 1)
+            for j, t in enumerate(t1) if t == "t" and j in range(1, (len(t1) - 1), 1)]
+        tab_mur.remove((v - 3, v - 2))  # Security construct object
         tab_mur.remove((2, 1))  # security init "start"
         while len(tab_mur) > 0:  # make labyrinth with algo
             a, b = tab_mur.pop(random.randint(0, len(tab_mur) - 1))
-            if tt[a][b] == 't':
-                if a % 2 == 0:
-                    v1 = tt[a - 1][b]
-                    v2 = tt[a + 1][b]
-                else:
-                    v1 = tt[a][b - 1]
-                    v2 = tt[a][b + 1]
-                if v1 != 't' and v2 != 't' and v1 != v2:
-                    for i, t1 in enumerate(tt):
-                        for j, t in enumerate(t1):
-                            if t == v2:
-                                tt[i][j] = v1
-                                tt[a][b] = v1
-        for pos in range(0, -2, -1):  # make "start" and "end"
-            t = tab_chemin_init.pop(pos)
-            tt[t[0]][t[1]] = "P"
+            v1 = tt[a - ((a % 2) ^ 1)][b - (a % 2)]
+            v2 = tt[a + ((a % 2) ^ 1)][b + (a % 2)]
+            if v1 != 't' and v2 != 't' and v1 != v2:
+                tt[a][b] = v1
+                def f2(i, j): tt[i][j] = v1
+                [f2(i, j) for i, t1 in enumerate(tt)
+                    for j, t in enumerate(t1) if t == v2]
+        tt[1][1] = "P" # start position
+        tt[-2][-2] = "P" # end position
         return tt
 
     def init_game(self, event):
