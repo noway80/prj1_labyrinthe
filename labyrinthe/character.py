@@ -45,7 +45,8 @@ class Character(Objet):
             self.txt = self.univers.zone_c.create_text(int(self.univers.width * self.univers.dimension_sprite / 2), int(
                 self.univers.width * self.univers.dimension_sprite / 2), text=texte, font="Arial 16 italic bold", fill="white")
             self.univers.zone_c.update()
-            time.sleep(2)
+            time.sleep(3)
+            self.univers.zone_c.update()
             self.univers.desactiv_command()
 
     @property

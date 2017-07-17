@@ -26,7 +26,7 @@ class Zone:
             self.frame.destroy()
         self.zone_c = Canvas(self.frame, width=self.width *
                              self.dimension_sprite, height=self.width * self.dimension_sprite)
-        self.zone_c.create_image(0, 0, anchor=NW, image=self.im_fond)
+        self.zone_c.create_image(0, -0, anchor=NW, image=self.im_fond)
         self.txt = self.zone_c.create_text(int(self.width * self.dimension_sprite / 2),
                                            int(self.width *
                                                self.dimension_sprite / 2),
@@ -70,7 +70,8 @@ class Zone:
                     elif line[x] == "P":  # position possible mac giver guardian
                         tab_position_character.append([x, y])
                     else:  # position possible object
-                        tab_position_objets.append([x, y])
+                        if x < (len(line)/2) or y < (len(line)/2):
+                            tab_position_objets.append([x, y])
                 y += 1
 
         self.draw_entity(self.wall)
@@ -85,7 +86,7 @@ class Zone:
 
     def make_labyrinth(self, v):
         """To make a labyrinth with algorithm random fusion """
-        tt = [[("t" if i % 2 == 0 else ("t" if j % 2 == 0 else i * v + j))
+        tt = [["t" if i % 2 == 0 else "t" if j % 2 == 0 else i * v + j
                for j in range(v)] for i in range(v)]
         tab_mur = [(i, j) for i, t1 in enumerate(tt) if i in range(1, (len(tt) - 1), 1)
             for j, t in enumerate(t1) if t == "t" and j in range(1, (len(t1) - 1), 1)]
@@ -139,7 +140,7 @@ class Zone:
         for coul in ["white", "red", "white"]:
             self.txt = self.zone_c.create_text(int(self.width * self.dimension_sprite / 2), int(
                 self.width * self.dimension_sprite / 2), text=texte, font="Arial 16 italic bold", fill=coul)
-            time.sleep(0.7)
+            time.sleep(0.5)
             self.zone_c.delete(self.txt)
         self.aff = False
 
@@ -155,7 +156,7 @@ class Zone:
             self.tab_objet.append(obj)
         self.mac_giver.dict_bag = {}
         self.zone_c.delete(ALL)
-        self.zone_c.create_image(0, 0, anchor=NW, image=self.im_fond)
+        self.zone_c.create_image(0, 0, anchor=NW, image=self.im_fond)        
         self.txt = self.zone_c.create_text(int(self.width * self.dimension_sprite / 2), int(
             self.width * self.dimension_sprite / 2), text='Press"SPACE" to Start !!!\r      "Echap" to quit', font="Arial 16 italic bold", fill="white")
         self.zone_c.bind("<space>", self.init_game)
